@@ -1,13 +1,13 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
-import { LayoutDashboard, LogOut, User, Wallet } from "lucide-react";
 
 import { createClient } from "@/lib/supabase/server";
 import { signOut } from "@/lib/actions/auth";
+import { Sidebar } from "@/components/dashboard/sidebar";
+import type { Profile } from "@/types";
 
 /**
  * Layout de la zona privada. El middleware ya bloquea el acceso sin sesión,
- * pero revalidamos aquí para obtener el usuario y mostrar su correo.
+ * pero revalidamos aquí para obtener el usuario y su perfil.
  */
 export default async function DashboardLayout({
   children,
@@ -21,50 +21,33 @@ export default async function DashboardLayout({
 
   if (!user) redirect("/login");
 
+  // Obtener perfil para mostrar el nombre del negocio en el sidebar
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", user.id)
+    .single<Profile>();
+
+  const businessName = profile?.business_name ?? null;
+  const fullName = profile?.full_name ?? null;
+
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50">
-      <header className="sticky top-0 z-10 border-b border-zinc-200 bg-white/80 backdrop-blur">
-        <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
-          <Link href="/dashboard" className="flex items-center gap-2">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-600 text-white">
-              <Wallet className="h-4 w-4" />
-            </span>
-            <span className="text-lg font-bold tracking-tight text-zinc-900">
-              ContaFácil
-            </span>
-          </Link>
+    <div className="min-h-screen bg-slate-50">
+      {/* Sidebar Navigation */}
+      <Sidebar
+        email={user.email ?? ""}
+        businessName={businessName}
+        fullName={fullName}
+        signOutAction={signOut}
+      />
 
-          <nav className="flex items-center gap-1">
-            <Link
-              href="/dashboard"
-              className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
-            >
-              <LayoutDashboard className="h-4 w-4" />
-              <span className="hidden sm:inline">Resumen</span>
-            </Link>
-            <Link
-              href="/perfil"
-              className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
-            >
-              <User className="h-4 w-4" />
-              <span className="hidden sm:inline">Perfil</span>
-            </Link>
-            <form action={signOut}>
-              <button
-                type="submit"
-                className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-zinc-600 hover:bg-zinc-100 hover:text-red-600"
-              >
-                <LogOut className="h-4 w-4" />
-                <span className="hidden sm:inline">Salir</span>
-              </button>
-            </form>
-          </nav>
-        </div>
-      </header>
-
-      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:px-6 sm:py-8">
-        {children}
-      </main>
+      {/* Main Layout Area */}
+      <div className="lg:pl-64 flex flex-col min-h-screen">
+        <main className="flex-1 px-4 py-6 sm:px-6 sm:py-8 max-w-6xl w-full mx-auto">
+          {children}
+        </main>
+      </div>
     </div>
   );
 }
+
