@@ -38,3 +38,25 @@ export interface MonthlySummary {
   expense: number;
   balance: number;
 }
+
+/** Voto de utilidad del glosario — tabla `public.glossary_feedback`. */
+export interface GlossaryFeedback {
+  id: string;
+  user_id: string;
+  term_key: string;
+  is_helpful: boolean;
+  created_at: string;
+}
+
+/** Sugerencia de término del glosario — tabla `public.glossary_suggestions`. */
+export interface GlossarySuggestion {
+  id: string;
+  user_id: string;
+  term_name: string;
+  description: string | null;
+  created_at: string;
+  profiles?: {
+    business_name: string | null;
+    full_name: string | null;
+  } | null;
+}

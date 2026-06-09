@@ -3,7 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, LogOut, Menu, User, Wallet, X, Receipt } from "lucide-react";
+import Image from "next/image";
+import { LayoutDashboard, LogOut, Menu, User, X, Receipt, BookOpen } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -20,7 +21,7 @@ export function Sidebar({ email, businessName, fullName, signOutAction }: Sideba
 
   const navItems = [
     {
-      name: "Resumen",
+      name: "Dashboard",
       href: "/dashboard",
       icon: LayoutDashboard,
     },
@@ -30,6 +31,11 @@ export function Sidebar({ email, businessName, fullName, signOutAction }: Sideba
       icon: Receipt,
     },
     {
+      name: "Glosario",
+      href: "/glosario",
+      icon: BookOpen,
+    },
+    {
       name: "Mi Perfil",
       href: "/perfil",
       icon: User,
@@ -37,19 +43,49 @@ export function Sidebar({ email, businessName, fullName, signOutAction }: Sideba
   ];
 
   const displayName = businessName || fullName || "Mi Negocio";
-  const userInitials = (fullName || businessName || email || "U")
-    .trim()
-    .slice(0, 2)
-    .toUpperCase();
 
-  const SidebarContent = () => (
+  const getInitials = () => {
+    if (fullName && fullName.trim()) {
+      const parts = fullName.trim().split(/\s+/);
+      if (parts.length >= 2) {
+        return (parts[0][0] + parts[1][0]).toUpperCase();
+      }
+      return parts[0].slice(0, 2).toUpperCase();
+    }
+    if (businessName && businessName.trim()) {
+      const parts = businessName.trim().split(/\s+/);
+      if (parts.length >= 2) {
+        return (parts[0][0] + parts[1][0]).toUpperCase();
+      }
+      return parts[0].slice(0, 2).toUpperCase();
+    }
+    if (email && email.trim()) {
+      const localPart = email.split("@")[0].trim();
+      const parts = localPart.split(/[\._-]+/);
+      if (parts.length >= 2) {
+        return (parts[0][0] + parts[1][0]).toUpperCase();
+      }
+      return localPart.slice(0, 2).toUpperCase();
+    }
+    return "U";
+  };
+
+  const userInitials = getInitials();
+
+  const renderSidebarContent = () => (
     <div className="flex h-full flex-col justify-between p-5">
       {/* Top Section */}
       <div className="space-y-6">
         {/* Brand/Logo */}
         <Link href="/dashboard" className="flex items-center gap-2.5 px-2" onClick={() => setIsOpen(false)}>
-          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-lg shadow-emerald-600/20 hover:scale-105 transition-transform duration-200">
-            <Wallet className="h-5 w-5" />
+          <span className="flex h-15 w-15 items-center justify-center rounded-xl border border-zinc-800 bg-zinc-900 shadow-md hover:scale-105 transition-transform duration-200 overflow-hidden">
+            <Image
+              src="/logo.png"
+              alt="ContaFácil Logo"
+              width={100}
+              height={100}
+              className="h-full w-full object-contain"
+            />
           </span>
           <div className="flex flex-col">
             <span className="text-base font-bold tracking-tight text-white">
@@ -123,8 +159,14 @@ export function Sidebar({ email, businessName, fullName, signOutAction }: Sideba
       {/* Mobile Top Navbar Header */}
       <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-zinc-200 bg-white/80 px-4 backdrop-blur lg:hidden">
         <Link href="/dashboard" className="flex items-center gap-2">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-600 text-white">
-            <Wallet className="h-4 w-4" />
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 bg-white shadow-sm overflow-hidden">
+            <Image
+              src="/logo.png"
+              alt="ContaFácil Logo"
+              width={50}
+              height={50}
+              className="h-full w-full object-contain"
+            />
           </span>
           <span className="text-lg font-bold tracking-tight text-zinc-900">
             ContaFácil
@@ -140,7 +182,7 @@ export function Sidebar({ email, businessName, fullName, signOutAction }: Sideba
 
       {/* Desktop Sidebar (Persistent Left) */}
       <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 border-r border-zinc-800 bg-zinc-950 text-zinc-100 lg:flex lg:flex-col">
-        <SidebarContent />
+        {renderSidebarContent()}
       </aside>
 
       {/* Mobile Sidebar Overlay/Drawer */}
@@ -161,7 +203,7 @@ export function Sidebar({ email, businessName, fullName, signOutAction }: Sideba
             </button>
           </div>
           <div className="flex-1 overflow-y-auto">
-            <SidebarContent />
+            {renderSidebarContent()}
           </div>
         </div>
       </div>

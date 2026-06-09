@@ -133,13 +133,14 @@ export default async function DashboardPage({
   return (
     <div className="flex flex-col gap-6">
       {/* Encabezado + selector de mes */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-slate-100 pb-5">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-zinc-900">
+          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 flex items-center gap-2">
+            <Activity className="h-8 w-8 text-emerald-600 animate-pulse" />
             Resumen Financiero
           </h1>
-          <p className="text-zinc-600 font-medium">
-            {formatMonthLabel(selectedMonth)}
+          <p className="text-slate-600 mt-1 text-sm md:text-base font-medium">
+            Monitorea los ingresos, egresos y la salud financiera de tu negocio en {formatMonthLabel(selectedMonth)}.
           </p>
         </div>
         <MonthPicker selectedMonth={selectedMonth} />

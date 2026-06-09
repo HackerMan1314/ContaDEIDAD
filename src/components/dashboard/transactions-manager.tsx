@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, Search, Trash2, Loader2, ArrowUpRight, ArrowDownRight } from "lucide-react";
+import { Plus, Search, Trash2, Loader2, ArrowUpRight, ArrowDownRight, Receipt } from "lucide-react";
 
 import { createClient } from "@/lib/supabase/client";
 import { formatCurrency, formatMonthLabel } from "@/lib/format";
@@ -73,12 +73,15 @@ export function TransactionsManager({
   return (
     <div className="space-y-6">
       {/* Top Header Section */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-slate-100 pb-5">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-zinc-900">
+          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 flex items-center gap-2">
+            <Receipt className="h-8 w-8 text-emerald-600 animate-pulse" />
             Transacciones
           </h1>
-          <p className="text-zinc-600">{formatMonthLabel(selectedMonth)}</p>
+          <p className="text-slate-600 mt-1 text-sm md:text-base font-medium">
+            Registra y gestiona los ingresos y egresos de tu negocio para el mes de {formatMonthLabel(selectedMonth)}.
+          </p>
         </div>
         <div className="flex items-center gap-3 self-end sm:self-auto">
           <MonthPicker selectedMonth={selectedMonth} />

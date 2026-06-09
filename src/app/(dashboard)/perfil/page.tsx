@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 
 import { createClient } from "@/lib/supabase/server";
 import { ProfileForm } from "@/components/profile/profile-form";
+import { User } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -43,12 +44,13 @@ export default async function PerfilPage() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold tracking-tight text-zinc-900">
-          Mi perfil
+      <div className="mb-6 border-b border-slate-100 pb-5">
+        <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 flex items-center gap-2">
+          <User className="h-8 w-8 text-emerald-600 animate-pulse" />
+          Mi Perfil
         </h1>
-        <p className="text-zinc-600">
-          Completa los datos de tu negocio.
+        <p className="text-slate-600 mt-1 text-sm md:text-base font-medium">
+          Completa y actualiza los datos principales de tu negocio y contacto.
         </p>
       </div>
 

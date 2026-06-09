@@ -1,4 +1,4 @@
-import { Wallet } from "lucide-react";
+import Image from "next/image";
 
 /**
  * Layout de la zona pública (login/registro): tarjeta centrada, mobile-first.
@@ -13,8 +13,15 @@ export default function AuthLayout({
       <div className="w-full max-w-md">
         {/* Marca */}
         <div className="mb-8 flex flex-col items-center gap-3 text-center">
-          <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-600 text-white">
-            <Wallet className="h-6 w-6" />
+          <span className="flex h-20 w-20 items-center justify-center rounded-xl border border-zinc-200 bg-white shadow-sm overflow-hidden">
+            <Image
+              src="/logo.png"
+              alt="ContaFácil Logo"
+              width={150}
+              height={150}
+              className="h-full w-full object-contain"
+              priority
+            />
           </span>
           <div>
             <h1 className="text-2xl font-bold tracking-tight text-zinc-900">
