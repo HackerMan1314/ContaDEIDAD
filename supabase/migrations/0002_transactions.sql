@@ -76,7 +76,7 @@ begin
       values (
         target_user,
         'income',
-        round((300 + random() * 2200)::numeric, 2),
+        round((300000 + random() * 2200000)::numeric, 0),
         income_categories[1 + floor(random() * array_length(income_categories, 1))::int],
         'Ingreso simulado',
         (date_trunc('month', current_date)
@@ -93,7 +93,7 @@ begin
       values (
         target_user,
         'expense',
-        round((100 + random() * 1600)::numeric, 2),
+        round((50000 + random() * 1450000)::numeric, 0),
         expense_categories[1 + floor(random() * array_length(expense_categories, 1))::int],
         'Egreso simulado',
         (date_trunc('month', current_date)

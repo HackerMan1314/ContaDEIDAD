@@ -153,8 +153,8 @@ export function TransactionModal({ isOpen, onClose, userId }: TransactionModalPr
               <Input
                 id="amount"
                 type="number"
-                step="0.01"
-                placeholder="0.00"
+                step="1"
+                placeholder="0"
                 className="pl-7"
                 aria-invalid={!!errors.amount}
                 {...register("amount", { valueAsNumber: true })}

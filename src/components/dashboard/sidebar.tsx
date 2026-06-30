@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
-import { LayoutDashboard, LogOut, Menu, User, X, Receipt, BookOpen } from "lucide-react";
+import { LayoutDashboard, LogOut, Menu, User, X, Receipt, BookOpen, FileText } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -29,6 +29,11 @@ export function Sidebar({ email, businessName, fullName, signOutAction }: Sideba
       name: "Transacciones",
       href: "/transacciones",
       icon: Receipt,
+    },
+    {
+      name: "Reportes F29",
+      href: "/reportes",
+      icon: FileText,
     },
     {
       name: "Glosario",

@@ -6,8 +6,8 @@
  * `occurred_at` viene como "YYYY-MM-DD" desde Postgres.
  */
 
-const LOCALE = "es-MX";
-const CURRENCY = "MXN";
+const LOCALE = "es-CL";
+const CURRENCY = "CLP";
 
 const MONTHS_ES = [
   "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
