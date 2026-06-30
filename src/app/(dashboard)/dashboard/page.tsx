@@ -35,6 +35,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { CategoryPieChart } from "@/components/dashboard/category-pie-chart";
 import { GlossaryTerm } from "@/components/glossary/glossary-term";
 import type { Transaction } from "@/types";
 import { cn } from "@/lib/utils";
@@ -46,6 +47,9 @@ export const metadata: Metadata = {
 /** Nº de meses que muestra el gráfico de evolución. */
 const CHART_MONTHS = 6;
 const MONTH_KEY_REGEX = /^\d{4}-(0[1-9]|1[0-2])$/;
+
+const INCOME_PIE_COLORS = ["#10b981", "#14b8a6", "#22c55e", "#84cc16", "#a3e635"];
+const EXPENSE_PIE_COLORS = ["#f43f5e", "#fb7185", "#f97316", "#fbbf24", "#ef4444"];
 
 export default async function DashboardPage({
   searchParams,
@@ -113,6 +117,24 @@ export default async function DashboardPage({
       category,
       amount,
       percentage: totalExpenses > 0 ? (amount / totalExpenses) * 100 : 0,
+    }))
+    .sort((a, b) => b.amount - a.amount);
+
+  // Ingresos por categoría
+  const incomes = selectedMonthTransactions.filter((t) => t.type === "income");
+  const totalIncomes = incomes.reduce((sum, t) => sum + t.amount, 0);
+
+  const incomeByCategoryMap = new Map<string, number>();
+  for (const t of incomes) {
+    const cat = t.category || "Otros";
+    incomeByCategoryMap.set(cat, (incomeByCategoryMap.get(cat) || 0) + t.amount);
+  }
+
+  const incomeByCategory = Array.from(incomeByCategoryMap.entries())
+    .map(([category, amount]) => ({
+      category,
+      amount,
+      percentage: totalIncomes > 0 ? (amount / totalIncomes) * 100 : 0,
     }))
     .sort((a, b) => b.amount - a.amount);
 
@@ -391,6 +413,41 @@ export default async function DashboardPage({
                 </CardContent>
               </Card>
             </div>
+          </div>
+
+          {/* Distribución por Categoría (gráficos de torta) */}
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <Card className="shadow-sm">
+              <CardHeader>
+                <CardTitle className="text-zinc-800">Ingresos por Categoría</CardTitle>
+                <CardDescription>
+                  ¿Qué categoría te genera más ingresos este mes?
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <CategoryPieChart
+                  data={incomeByCategory}
+                  colors={INCOME_PIE_COLORS}
+                  emptyLabel="No hay ingresos registrados en este periodo."
+                />
+              </CardContent>
+            </Card>
+
+            <Card className="shadow-sm">
+              <CardHeader>
+                <CardTitle className="text-zinc-800">Egresos por Categoría</CardTitle>
+                <CardDescription>
+                  ¿Qué categoría concentra más egresos este mes?
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <CategoryPieChart
+                  data={expenseByCategory}
+                  colors={EXPENSE_PIE_COLORS}
+                  emptyLabel="No hay egresos registrados en este periodo."
+                />
+              </CardContent>
+            </Card>
           </div>
         </>
       )}
